@@ -1,0 +1,207 @@
+.orders-table-container {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  animation: slideIn 0.3s ease;
+}
+
+.table-responsive {
+  overflow-x: auto;
+}
+
+.orders-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.orders-table thead {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+}
+
+.orders-table th {
+  padding: 1rem;
+  text-align: left;
+  font-weight: 600;
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.orders-table tbody tr {
+  border-bottom: 1px solid #eee;
+  transition: background-color 0.2s ease;
+}
+
+.orders-table tbody tr:hover {
+  background-color: #f9f9f9;
+}
+
+.orders-table td {
+  padding: 1rem;
+  font-size: 0.9rem;
+  color: #333;
+}
+
+.order-id {
+  font-weight: 600;
+  color: #667eea;
+  font-family: 'Courier New', monospace;
+}
+
+.timestamp {
+  font-size: 0.8rem;
+  color: #666;
+  white-space: nowrap;
+}
+
+.customer-name {
+  font-weight: 500;
+}
+
+.delivery-date {
+  font-weight: 500;
+  color: #667eea;
+  min-width: 100px;
+}
+
+.delivery-destination {
+  color: #666;
+}
+
+.invoice-total {
+  font-weight: 600;
+  color: #27ae60;
+  min-width: 100px;
+}
+
+.boxes-count {
+  text-align: center;
+  font-weight: 600;
+}
+
+.status {
+  text-align: center;
+}
+
+.status-badge {
+  display: inline-block;
+  padding: 0.4rem 0.8rem;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+}
+
+.status-pending {
+  background: #fff3cd;
+  color: #856404;
+}
+
+.status-confirmed {
+  background: #d4edda;
+  color: #155724;
+}
+
+.status-delivered {
+  background: #d1ecf1;
+  color: #0c5460;
+}
+
+.status-cancelled {
+  background: #f8d7da;
+  color: #721c24;
+}
+
+.notes {
+  max-width: 150px;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+  color: #999;
+}
+
+.actions {
+  text-align: center;
+  white-space: nowrap;
+}
+
+.btn-action {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1.2rem;
+  padding: 0.25rem 0.5rem;
+  margin: 0 0.25rem;
+  transition: all 0.2s ease;
+  color: #667eea;
+}
+
+.btn-action:hover {
+  transform: scale(1.2);
+}
+
+.btn-edit {
+  color: #667eea;
+}
+
+.btn-edit:hover {
+  color: #5568d3;
+}
+
+.btn-delete {
+  color: #ff6b6b;
+}
+
+.btn-delete:hover {
+  color: #ee5a52;
+}
+
+@media (max-width: 1024px) {
+  .orders-table th,
+  .orders-table td {
+    padding: 0.75rem 0.5rem;
+    font-size: 0.85rem;
+  }
+
+  .notes {
+    max-width: 100px;
+  }
+}
+
+@media (max-width: 768px) {
+  .orders-table {
+    font-size: 0.8rem;
+  }
+
+  .orders-table th,
+  .orders-table td {
+    padding: 0.5rem 0.25rem;
+  }
+
+  .timestamp {
+    font-size: 0.7rem;
+  }
+
+  .notes {
+    display: none;
+  }
+
+  .status-badge {
+    padding: 0.3rem 0.6rem;
+    font-size: 0.7rem;
+  }
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateY(10px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
