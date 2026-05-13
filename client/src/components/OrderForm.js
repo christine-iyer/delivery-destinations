@@ -11,6 +11,7 @@ function OrderForm({ onSubmit, onCancel, initialData, isEditMode }) {
     deliveryDestination: '',
     invoiceTotal: '',
     numberOfBoxes: '',
+    calculatedFee: 0,
     status: 'Pending',
     notes: '',
   });
@@ -18,6 +19,22 @@ function OrderForm({ onSubmit, onCancel, initialData, isEditMode }) {
   const [customerNames, setCustomerNames] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+
+  // Calculate fee based on invoice total (sliding scale)
+  const calculateFee = (invoiceTotal) => {
+    const total = parseFloat(invoiceTotal) || 0;
+    if (total <= 66.66) {
+      return 10;
+    } else if (total <= 110) {
+      return total * 0.15;
+    } else if (total <= 200) {
+      return total * 0.14;
+    } else if (total <= 450) {
+      return total * 0.12;
+    } else {
+      return total * 0.1;
+    }
+  };
 
   // Get next Friday
   const getNextFriday = () => {
@@ -31,9 +48,13 @@ function OrderForm({ onSubmit, onCancel, initialData, isEditMode }) {
 
   useEffect(() => {
     if (isEditMode && initialData) {
+      const dataWithFee = {
+        ...initialData,
+        calculatedFee: calculateFee(initialData.invoiceTotal || 0),
+      };
       setFormData((prev) => ({
         ...prev,
-        ...initialData,
+        ...dataWithFee,
       }));
     } else {
       // Set default delivery date to next Friday
@@ -62,7 +83,14 @@ function OrderForm({ onSubmit, onCancel, initialData, isEditMode }) {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
+    const updatedData = { ...formData, [name]: value };
+    
+    // Recalculate fee if invoiceTotal changed
+    if (name === 'invoiceTotal') {
+      updatedData.calculatedFee = calculateFee(value);
+    }
+    
+    setFormData(updatedData);
   };
 
   const handleSubmit = async (e) => {
@@ -106,6 +134,7 @@ function OrderForm({ onSubmit, onCancel, initialData, isEditMode }) {
         deliveryDestination: formData.deliveryDestination,
         invoiceTotal: formData.invoiceTotal,
         numberOfBoxes: formData.numberOfBoxes,
+        calculatedFee: formData.calculatedFee,
         status: formData.status,
         notes: formData.notes,
       });
@@ -204,6 +233,17 @@ function OrderForm({ onSubmit, onCancel, initialData, isEditMode }) {
               required
               className="form-input"
             />
+
+          <div className="form-group">
+            <label htmlFor="calculatedFee">Commission Fee (USD)</label>
+            <input
+              id="calculatedFee"
+              type="text"
+              value={formData.calculatedFee.toFixed(2)}
+              readOnly
+              className="form-input"
+            />
+          </div>
           </div>
         </div>
 
