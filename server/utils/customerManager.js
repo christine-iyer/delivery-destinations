@@ -13,7 +13,7 @@ const loadCustomers = () => {
   try {
     const csvPath = path.join(
       __dirname,
-      '../../client/data/customerContactList.csv'
+      '../../client/src/data/customerContactList.csv'
     );
     const fileContent = fs.readFileSync(csvPath, 'utf-8');
 

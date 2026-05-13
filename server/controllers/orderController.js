@@ -1,16 +1,30 @@
-const {
-  getOrders,
-  addOrder,
-  updateOrder,
-  deleteOrder,
-} = require('../utils/sheetsAPI');
-const { getCustomerByEmail } = require('../utils/customerManager');
+const { getCustomerByEmail, getAllCustomers } = require('../utils/customerManager');
+
+// Lazy load sheetsAPI only when needed to avoid authentication errors for customer-only endpoints
+let sheetsAPI = null;
+const getSheetsAPI = () => {
+  if (!sheetsAPI) {
+    sheetsAPI = require('../utils/sheetsAPI');
+  }
+  return sheetsAPI;
+};
 
 const SPREADSHEET_ID = process.env.GOOGLE_SHEET_ID;
+
+// Get customer names for dropdown (does not require Google Sheets)
+exports.getCustomerNames = async (req, res, next) => {
+  try {
+    const names = getAllCustomers();
+    res.json({ success: true, data: names });
+  } catch (error) {
+    next(error);
+  }
+};
 
 // Get all orders
 exports.getAll = async (req, res, next) => {
   try {
+    const { getOrders } = getSheetsAPI();
     const orders = await getOrders(SPREADSHEET_ID);
     res.json({ success: true, data: orders });
   } catch (error) {
@@ -55,6 +69,7 @@ exports.create = async (req, res, next) => {
       notes,
     };
 
+    const { addOrder } = getSheetsAPI();
     const result = await addOrder(SPREADSHEET_ID, newOrder);
     res.status(201).json({ success: true, data: result });
   } catch (error) {
@@ -85,6 +100,7 @@ exports.update = async (req, res, next) => {
       }
     });
 
+    const { updateOrder } = getSheetsAPI();
     const result = await updateOrder(SPREADSHEET_ID, orderId, updatedOrder);
     res.json({ success: true, data: result });
   } catch (error) {
@@ -96,19 +112,9 @@ exports.update = async (req, res, next) => {
 exports.delete = async (req, res, next) => {
   try {
     const { orderId } = req.params;
+    const { deleteOrder } = getSheetsAPI();
     const result = await deleteOrder(SPREADSHEET_ID, orderId);
     res.json({ success: true, data: result });
-  } catch (error) {
-    next(error);
-  }
-};
-
-// Get customer names for autocomplete
-exports.getCustomerNames = async (req, res, next) => {
-  try {
-    const { getAllCustomers } = require('../utils/customerManager');
-    const names = getAllCustomers();
-    res.json({ success: true, data: names });
   } catch (error) {
     next(error);
   }
